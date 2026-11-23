@@ -1,0 +1,1219 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090a12">
+<meta name="description" content="RUHDAŞ - Tanış, sohbet et, oyun oyna ve dostluklar kur.">
+<title>RUHDAŞ | Sosyal Eğlence Dünyası</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root{
+ --bg:#090912;
+ --surface:#151422;
+ --surface2:#1c192b;
+ --text:#fff;
+ --muted:#a29caf;
+ --purple:#a36cff;
+ --pink:#e66bc8;
+ --teal:#21d8c2;
+ --border:rgba(255,255,255,.09);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ background:var(--bg);
+ color:var(--text);
+ font-family:Inter,Arial,sans-serif;
+ min-height:100vh;
+ overflow-x:hidden;
+}
+
+button,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible{
+ outline:2px solid var(--teal);
+ outline-offset:3px;
+}
+
+.app{min-height:100vh}
+
+.sidebar{
+ position:fixed;
+ inset:0 auto 0 0;
+ width:245px;
+ background:#100e1b;
+ border-right:1px solid var(--border);
+ padding:28px 17px;
+ display:flex;
+ flex-direction:column;
+ z-index:20;
+}
+
+.logo{
+ font-size:29px;
+ font-weight:900;
+ letter-spacing:2px;
+ margin:0 0 38px 12px;
+ background:linear-gradient(100deg,#c3a4ff,#ed80cb);
+ color:transparent;
+ background-clip:text;
+}
+
+.nav-title{
+ font-size:10px;
+ letter-spacing:2px;
+ color:#777086;
+ margin:20px 12px 12px;
+ font-weight:800;
+}
+
+.nav-item{
+ padding:14px;
+ display:flex;
+ align-items:center;
+ gap:13px;
+ border-radius:12px;
+ color:var(--muted);
+ font-size:13px;
+ font-weight:600;
+ margin-bottom:5px;
+ cursor:pointer;
+ transition:.2s;
+}
+
+.nav-item:hover,.nav-item.active{
+ background:rgba(163,108,255,.15);
+ color:white;
+}
+
+.nav-item.active{border-left:3px solid var(--purple)}
+
+.vip{
+ margin-top:auto;
+ padding:19px;
+ border-radius:17px;
+ background:linear-gradient(135deg,#542a91,#a04485);
+}
+
+.vip h3{font-size:16px;margin-bottom:8px}
+.vip p{font-size:11px;line-height:1.7;color:#eee}
+
+.vip button{
+ margin-top:15px;
+ padding:11px 16px;
+ border:0;
+ border-radius:9px;
+ color:#67338e;
+ font-weight:800;
+ background:white;
+}
+
+.main{
+ margin-left:245px;
+ width:calc(100% - 245px);
+ max-width:1700px;
+ padding:27px 35px 60px;
+}
+
+.topbar{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:15px;
+ margin-bottom:32px;
+}
+
+.search-wrap{
+ flex:1;
+ max-width:600px;
+ position:relative;
+}
+
+.search{
+ width:100%;
+ padding:15px 18px;
+ background:var(--surface);
+ border:1px solid var(--border);
+ border-radius:14px;
+ color:white;
+ outline:none;
+}
+
+.search:focus{border-color:var(--purple)}
+
+.avatar{
+ width:48px;
+ height:48px;
+ flex-shrink:0;
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ font-weight:900;
+ font-size:19px;
+ background:linear-gradient(135deg,#9765ff,#ed70bd);
+}
+
+.page{display:none;animation:fade .25s}
+.page.active{display:block}
+
+@keyframes fade{
+ from{opacity:0;transform:translateY(7px)}
+ to{opacity:1;transform:translateY(0)}
+}
+
+.hero{
+ padding:39px;
+ border-radius:25px;
+ background:
+ radial-gradient(ellipse at 85% 10%,rgba(237,112,189,.35),transparent 40%),
+ linear-gradient(120deg,#302052,#17132b);
+ border:1px solid var(--border);
+ margin-bottom:30px;
+}
+
+.hero h1{font-size:clamp(25px,4vw,40px);margin-bottom:14px}
+.hero p{color:#c7bddb;font-size:14px;line-height:1.9}
+
+.primary{
+ padding:13px 19px;
+ border:0;
+ border-radius:11px;
+ color:white;
+ font-weight:800;
+ background:linear-gradient(110deg,#9867ff,#db67c6);
+ transition:.2s;
+}
+
+.primary:hover{filter:brightness(1.13);transform:translateY(-2px)}
+.hero .primary{margin-top:22px}
+
+.heading{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ margin:29px 0 17px;
+}
+
+.heading h2{font-size:20px}
+.heading small{font-size:12px;color:var(--muted)}
+
+.categories{
+ display:flex;
+ gap:10px;
+ overflow-x:auto;
+ padding:5px 0 15px;
+ scrollbar-width:none;
+}
+
+.categories::-webkit-scrollbar,.friend-list::-webkit-scrollbar{display:none}
+
+.category{
+ padding:11px 17px;
+ border:1px solid var(--border);
+ background:var(--surface);
+ color:var(--muted);
+ border-radius:30px;
+ white-space:nowrap;
+}
+
+.category.active{
+ color:white;
+ border-color:var(--purple);
+ background:rgba(152,103,255,.2);
+}
+
+.rooms{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:16px;
+}
+
+.room{
+ background:var(--surface);
+ border:1px solid var(--border);
+ border-radius:18px;
+ overflow:hidden;
+ transition:.25s;
+}
+
+.room:hover{transform:translateY(-4px);border-color:var(--purple)}
+
+.room-cover{
+ height:135px;
+ display:grid;
+ place-items:center;
+ font-size:54px;
+ position:relative;
+}
+
+.cover1{background:linear-gradient(135deg,#493078,#a34f92)}
+.cover2{background:linear-gradient(135deg,#164d70,#416cba)}
+.cover3{background:linear-gradient(135deg,#74402c,#c36c65)}
+.cover4{background:linear-gradient(135deg,#343a70,#8c59ba)}
+.cover5{background:linear-gradient(135deg,#542c63,#bd5790)}
+.cover6{background:linear-gradient(135deg,#17594e,#39998a)}
+
+.live{
+ position:absolute;
+ top:12px;
+ left:12px;
+ font-size:10px;
+ font-weight:900;
+ background:#ed476c;
+ padding:7px 10px;
+ border-radius:8px;
+}
+
+.room-info{padding:16px}
+.room-info h3{font-size:15px;margin-bottom:9px}
+.room-info p{font-size:12px;color:var(--muted)}
+
+.room-bottom{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-top:16px;
+}
+
+.join{
+ border:1px solid rgba(152,103,255,.4);
+ background:rgba(152,103,255,.15);
+ color:#c7aeff;
+ padding:10px 14px;
+ border-radius:10px;
+ font-size:12px;
+ font-weight:800;
+}
+
+.empty{
+ padding:55px 20px;
+ background:var(--surface);
+ border-radius:18px;
+ border:1px solid var(--border);
+ text-align:center;
+ color:var(--muted);
+ line-height:2;
+}
+
+.profile{
+ padding:27px;
+ display:flex;
+ align-items:center;
+ gap:20px;
+ border-radius:19px;
+ background:var(--surface);
+ border:1px solid var(--border);
+}
+
+.profile-icon{
+ width:85px;
+ height:85px;
+ flex-shrink:0;
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ font-size:32px;
+ background:linear-gradient(135deg,#9867ff,#ed70bd);
+}
+
+.profile h2{font-size:22px;margin-bottom:7px}
+.profile p{color:var(--muted);font-size:13px}
+
+.profile-actions{margin-top:20px}
+
+/* OYUN MERKEZİ */
+
+.game-hub{
+ background:#06231e;
+ margin:-27px -35px -60px;
+ padding:25px 35px 100px;
+ min-height:85vh;
+ border-radius:0;
+}
+
+.hub-heading{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+ margin:27px 0 17px;
+}
+
+.hub-heading h2{font-size:21px}
+
+.hub-heading small{color:#a6c6bd;font-size:12px}
+
+.friend-list{
+ display:flex;
+ gap:20px;
+ overflow-x:auto;
+ padding:5px 0 20px;
+ scrollbar-width:none;
+}
+
+.friend{
+ min-width:85px;
+ text-align:center;
+ color:white;
+ font-size:12px;
+}
+
+.friend-avatar{
+ width:76px;
+ height:76px;
+ border:4px solid #19d7c2;
+ border-radius:50%;
+ display:grid;
+ place-items:center;
+ font-size:35px;
+ margin:0 auto 9px;
+ background:linear-gradient(135deg,#40306c,#a54c91);
+ position:relative;
+}
+
+.friend-avatar.online:after{
+ content:"";
+ width:12px;
+ height:12px;
+ border-radius:50%;
+ background:#32e69b;
+ border:2px solid #06231e;
+ position:absolute;
+ right:0;
+ bottom:2px;
+}
+
+.friend-more{
+ min-width:76px;
+ height:76px;
+ display:grid;
+ place-items:center;
+ border-radius:50%;
+ border:3px solid var(--teal);
+ background:#17473e;
+ font-size:25px;
+ margin:0 auto 9px;
+}
+
+.custom-room{
+ border:0;
+ background:#ffffff20;
+ color:white;
+ padding:10px 15px;
+ border-radius:30px;
+ white-space:nowrap;
+}
+
+.game-banner{
+ min-height:145px;
+ border-radius:20px;
+ background:linear-gradient(110deg,#b62e57,#f07891);
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ padding:24px;
+ margin-bottom:20px;
+ color:white;
+ cursor:pointer;
+ overflow:hidden;
+}
+
+.game-banner h2{font-size:25px}
+.game-banner p{font-size:12px;margin-top:8px;color:#ffe5ee}
+.game-banner .banner-emoji{font-size:65px}
+
+.game-hub-grid{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:15px;
+}
+
+.hub-game{
+ aspect-ratio:.76;
+ border-radius:19px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:space-between;
+ padding:12px 7px;
+ overflow:hidden;
+ border:1px solid #ffffff25;
+ color:white;
+ cursor:pointer;
+ transition:.2s;
+ box-shadow:0 7px 18px #0003;
+ position:relative;
+}
+
+.hub-game:hover{transform:translateY(-4px);filter:brightness(1.1)}
+.hub-game:active{transform:scale(.97)}
+
+.hub-game .game-art{
+ font-size:clamp(38px,7vw,65px);
+ filter:drop-shadow(0 5px 4px #0005);
+ margin-top:18px;
+}
+
+.hub-game h3{
+ font-size:clamp(11px,2vw,16px);
+ text-align:center;
+ text-shadow:0 2px 4px #0008;
+ line-height:1.3;
+ margin-bottom:10px;
+}
+
+.game-new{
+ position:absolute;
+ top:10px;
+ left:0;
+ background:#fa3374;
+ color:white;
+ padding:5px 9px;
+ border-radius:0 15px 15px 0;
+ font-size:10px;
+ font-weight:900;
+}
+
+.game-tag{
+ position:absolute;
+ top:10px;
+ right:8px;
+ background:#0004;
+ padding:5px 7px;
+ border-radius:8px;
+ font-size:9px;
+}
+
+.game-section-title{
+ color:white;
+ font-size:17px;
+ margin:27px 0 15px;
+}
+
+/* OYUN PENCERESİ */
+
+.game-modal{
+ position:fixed;
+ inset:0;
+ z-index:100;
+ background:#000c;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+}
+
+.game-modal.show{display:flex}
+
+.game-modal-content{
+ background:#10251f;
+ border:1px solid #ffffff20;
+ border-radius:23px;
+ padding:28px;
+ width:100%;
+ max-width:410px;
+ text-align:center;
+ color:white;
+ max-height:85vh;
+ overflow:auto;
+}
+
+.big-emoji{font-size:75px;margin:20px}
+.game-modal-content h2{font-size:23px}
+.game-modal-content p{color:#aabdb6;line-height:1.7;margin:15px 0}
+
+.close-game{
+ background:#ffffff15;
+ border:0;
+ color:white;
+ border-radius:10px;
+ padding:11px 20px;
+ margin-top:10px;
+}
+
+.mobile-nav{
+ display:none;
+}
+
+/* GİRİŞ PENCERESİ */
+
+.auth-modal{
+ display:none;
+ position:fixed;
+ inset:0;
+ z-index:110;
+ background:#000c;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+}
+
+.auth-modal.show{display:flex}
+
+.auth-box{
+ width:100%;
+ max-width:400px;
+ padding:28px;
+ border-radius:22px;
+ background:#1b1729;
+ border:1px solid var(--border);
+}
+
+.auth-box h2{margin-bottom:20px}
+
+.auth-box input{
+ width:100%;
+ padding:14px;
+ background:#100d1b;
+ border:1px solid var(--border);
+ border-radius:10px;
+ color:white;
+ margin-bottom:12px;
+}
+
+.auth-box button{width:100%;margin-top:8px}
+
+#authStatus{font-size:12px;color:#d0b4ff;margin-top:12px}
+
+@media(max-width:1050px){
+ .rooms{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:700px){
+ .sidebar{display:none}
+
+ .main{
+  margin:0;
+  width:100%;
+  padding:20px 15px 110px;
+ }
+
+ .hero{padding:26px 21px}
+
+ .rooms{grid-template-columns:1fr}
+
+ .topbar{margin-bottom:27px}
+ .search{padding:17px}
+ .avatar{width:48px;height:48px}
+
+ .game-hub{
+  margin:-20px -15px -110px;
+  padding:10px 15px 125px;
+  min-height:85vh;
+ }
+
+ .game-hub-grid{gap:12px}
+
+ .game-banner{min-height:125px;padding:19px}
+ .game-banner h2{font-size:23px}
+ .game-banner .banner-emoji{font-size:53px}
+
+ .hub-heading h2{font-size:19px}
+
+ .mobile-nav{
+  display:flex;
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:50;
+  background:rgba(15,14,26,.97);
+  backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  justify-content:space-around;
+  padding:11px 3px calc(11px + env(safe-area-inset-bottom));
+ }
+
+ .mobile-nav button{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  background:none;
+  border:0;
+  color:var(--muted);
+  font-size:10px;
+  min-width:55px;
+ }
+
+ .mobile-nav button.active{color:#c3a4ff}
+ .mobile-nav span{font-size:22px}
+
+ .profile{padding:19px}
+ .profile-icon{width:65px;height:65px}
+}
+
+@media(max-width:370px){
+ .game-hub-grid{gap:9px}
+ .hub-game{border-radius:15px}
+ .hub-game .game-art{font-size:39px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- MASAÜSTÜ MENÜ -->
+<aside class="sidebar">
+ <div class="logo">RUHDAŞ.</div>
+
+ <div class="nav-title">ANA MENÜ</div>
+ <div class="nav-item active" data-page="home">⌂　Keşfet</div>
+ <div class="nav-item" data-page="rooms">◉　Sesli Odalar</div>
+ <div class="nav-item" data-page="games">🎮　Oyun Merkezi</div>
+ <div class="nav-item" data-page="messages">✉　Mesajlar</div>
+
+ <div class="nav-title">SOSYAL</div>
+ <div class="nav-item" data-page="friends">♙　Arkadaşlar</div>
+ <div class="nav-item" data-page="gifts">♢　Hediyeler</div>
+ <div class="nav-item" data-page="profile">◎　Profilim</div>
+
+ <div class="vip">
+  <h3>👑 RUHDAŞ VIP</h3>
+  <p>Özel ayrıcalıkları keşfet. Sosyal evrenin ayrıcalıklı üyesi ol.</p>
+  <button onclick="showVIP()">VIP'yi Keşfet</button>
+ </div>
+</aside>
+
+<main class="main">
+
+<!-- ÜST BAR -->
+<header class="topbar">
+ <div class="search-wrap">
+  <input class="search" id="searchInput" placeholder="⌕  Oda veya oyun ara...">
+ </div>
+ <div class="avatar" id="topAvatar">R</div>
+</header>
+
+<!-- KEŞFET -->
+<section class="page active" id="home">
+
+ <div class="hero">
+  <h1>RUHDAŞ'a hoş geldin! ✨</h1>
+  <p>Yeni insanlarla tanış, sesli sohbetlere katıl,<br>oyna ve unutulmaz dostluklar kur.</p>
+  <button class="primary" onclick="navigate('rooms')">Odaları Keşfet →</button>
+ </div>
+
+ <div class="heading">
+  <h2>Keşfet</h2>
+  <small>Senin için seçtiklerimiz</small>
+ </div>
+
+ <div class="categories">
+  <button class="category active" data-filter="all">Tümü</button>
+  <button class="category" data-filter="music">🎵 Müzik</button>
+  <button class="category" data-filter="chat">💬 Sohbet</button>
+  <button class="category" data-filter="game">🎮 Oyun</button>
+  <button class="category" data-filter="love">💜 Eğlence</button>
+ </div>
+
+ <div class="heading">
+  <h2>🔥 Popüler Odalar</h2>
+  <small>Topluluklar</small>
+ </div>
+
+ <div class="rooms" id="homeRooms"></div>
+
+ <div class="heading">
+  <h2>🎮 Oyun Dünyası</h2>
+  <button class="join" onclick="navigate('games')">Tüm oyunlar →</button>
+ </div>
+
+ <div class="game-hub-grid" id="homeGames"></div>
+
+</section>
+
+<!-- ODALAR -->
+<section class="page" id="rooms">
+ <div class="heading">
+  <h2>🎙️ Sesli Odalar</h2>
+  <button class="join" onclick="createRoom()">＋ Oda oluştur</button>
+ </div>
+ <div class="rooms" id="allRooms"></div>
+</section>
+
+<!-- OYUN MERKEZİ -->
+<section class="page" id="games">
+
+ <div class="game-hub">
+
+  <div class="hub-heading">
+   <h2>Arkadaşlara katıl</h2>
+  </div>
+
+  <div class="friend-list">
+   <div class="friend">
+    <div class="friend-avatar online">👩🏻</div>
+    LanaAşk ❤️
+   </div>
+   <div class="friend">
+    <div class="friend-avatar online">👩🏼</div>
+    Zeynep
+   </div>
+   <div class="friend">
+    <div class="friend-avatar online">👨🏻</div>
+    Mert
+   </div>
+   <div class="friend">
+    <div class="friend-avatar">🧔🏻</div>
+    KRAL
+   </div>
+   <div class="friend">
+    <div class="friend-more">👥</div>
+    4 Daha
+   </div>
+  </div>
+
+  <div class="hub-heading">
+   <h2>Klasik oyunlar</h2>
+   <button class="custom-room" onclick="createGameRoom()">Özel oda ＋</button>
+  </div>
+
+  <div class="game-banner" onclick="openGame('Tombala','🎱')">
+   <div>
+    <h2>Tombala</h2>
+    <p>Arkadaşlarınla eğlencenin tadını çıkar!</p>
+   </div>
+   <div class="banner-emoji">🎟️</div>
+  </div>
+
+  <div class="game-hub-grid" id="gameGrid"></div>
+
+ </div>
+</section>
+
+<!-- MESAJLAR -->
+<section class="page" id="messages">
+ <div class="heading"><h2>✉ Mesajlar</h2></div>
+ <div class="empty">
+  <div style="font-size:45px">💬</div>
+  <h3>Henüz mesajın bulunmuyor.</h3>
+  <p>Yeni arkadaşlıklar kurmaya başla!</p>
+ </div>
+</section>
+
+<!-- ARKADAŞLAR -->
+<section class="page" id="friends">
+ <div class="heading"><h2>♙ Arkadaşlar</h2></div>
+ <div class="empty">
+  <div style="font-size:45px">👥</div>
+  <h3>Henüz arkadaşın yok.</h3>
+  <p>Yeni insanlarla tanışmaya başla!</p>
+ </div>
+</section>
+
+<!-- HEDİYELER -->
+<section class="page" id="gifts">
+ <div class="heading"><h2>🎁 Hediye Merkezi</h2></div>
+ <div class="game-hub-grid" id="giftGrid"></div>
+</section>
+
+<!-- PROFİL -->
+<section class="page" id="profile">
+ <div class="heading"><h2>◎ Profilim</h2></div>
+
+ <div class="profile">
+  <div class="profile-icon" id="profileAvatar">R</div>
+  <div>
+   <h2 id="profileName">Misafir Kullanıcı</h2>
+   <p>RUHDAŞ üyesi ol!</p>
+  </div>
+ </div>
+
+ <div class="profile-actions">
+  <button class="primary" onclick="showAuth()">Giriş Yap / Kayıt Ol</button>
+  <button class="join" onclick="editName()">Adımı düzenle</button>
+  <button class="join" onclick="logout()">Çıkış yap</button>
+ </div>
+</section>
+
+</main>
+</div>
+
+<!-- MOBİL ALT MENÜ -->
+<nav class="mobile-nav">
+ <button class="active" data-page="home"><span>⌂</span>Keşfet</button>
+ <button data-page="rooms"><span>◉</span>Odalar</button>
+ <button data-page="games"><span>♧</span>Oyunlar</button>
+ <button data-page="messages"><span>✉</span>Mesajlar</button>
+ <button data-page="profile"><span>◎</span>Profil</button>
+</nav>
+
+<!-- OYUN MODALI -->
+<div class="game-modal" id="gameModal">
+ <div class="game-modal-content">
+  <div class="big-emoji" id="gameEmoji">🎮</div>
+  <h2 id="gameName">Oyun</h2>
+  <p id="gameDescription">RUHDAŞ oyun dünyasına hoş geldin!</p>
+  <button class="primary" onclick="startGame()">Oyunu başlat</button>
+  <br>
+  <button class="close-game" onclick="closeGame()">Geri dön</button>
+ </div>
+</div>
+
+<!-- GİRİŞ MODALI -->
+<div class="auth-modal" id="authModal">
+ <div class="auth-box">
+  <h2>RUHDAŞ'a Katıl ❤️</h2>
+  <input id="authName" placeholder="Kullanıcı adın">
+  <input id="authEmail" type="email" placeholder="E-posta adresin">
+  <input id="authPassword" type="password" placeholder="Şifren">
+  <button class="primary" onclick="register()">Hesap oluştur</button>
+  <button class="join" style="width:100%;margin-top:10px" onclick="login()">Giriş yap</button>
+  <button class="close-game" style="width:100%" onclick="closeAuth()">Kapat</button>
+  <p id="authStatus"></p>
+ </div>
+</div>
+
+<script>
+
+/* ODA VERİLERİ */
+
+const rooms=[
+ {name:"Gece Muhabbeti",cat:"chat",cover:"cover1",emoji:"🌙",members:128},
+ {name:"Müzik Dünyası",cat:"music",cover:"cover2",emoji:"🎧",members:94},
+ {name:"Aşk ve Sohbet",cat:"love",cover:"cover3",emoji:"💜",members:76},
+ {name:"Oyun Arenası",cat:"game",cover:"cover4",emoji:"🎮",members:62},
+ {name:"Kalpten Kalbe",cat:"love",cover:"cover5",emoji:"💗",members:51},
+ {name:"Chill Zone",cat:"music",cover:"cover6",emoji:"🌴",members:38}
+];
+
+/* OYUN VERİLERİ */
+
+const games=[
+ {name:"Kart Kapışması",emoji:"🃏",color:"linear-gradient(145deg,#f64a3e,#ff817a)"},
+ {name:"Domino 50",emoji:"🁫",color:"linear-gradient(145deg,#f18b00,#ffc02b)"},
+ {name:"Candy Boom",emoji:"🍭",color:"linear-gradient(145deg,#ec398c,#ff83b9)"},
+ {name:"Bubble Boom",emoji:"🫧",color:"linear-gradient(145deg,#087be9,#55b5ff)"},
+ {name:"Ludo",emoji:"🎲",color:"linear-gradient(145deg,#3939c8,#756bff)",new:true},
+ {name:"Taklit",emoji:"🎭",color:"linear-gradient(145deg,#8a25c5,#df55ef)",new:true},
+ {name:"Jackaroo",emoji:"🏁",color:"linear-gradient(145deg,#e57b16,#ffc04d)"},
+ {name:"8 Top",emoji:"🎱",color:"linear-gradient(145deg,#7b35b9,#c16be9)"},
+ {name:"Kelime Savaşı",emoji:"🔤",color:"linear-gradient(145deg,#ed4c28,#ff9b4b)"},
+ {name:"Bilgi Arenası",emoji:"🧠",color:"linear-gradient(145deg,#1674c9,#54b9f5)"},
+ {name:"Satranç",emoji:"♟️",color:"linear-gradient(145deg,#087e70,#28c8a3)"},
+ {name:"Tavla",emoji:"🎲",color:"linear-gradient(145deg,#b73555,#f16b87)"},
+ {name:"Okey",emoji:"🀄",color:"linear-gradient(145deg,#a34c1c,#ed9a35)"},
+ {name:"Kimim Ben?",emoji:"🎭",color:"linear-gradient(145deg,#5b40be,#a77aff)"},
+ {name:"Hızlı Matematik",emoji:"➗",color:"linear-gradient(145deg,#1767b8,#38c5df)"},
+ {name:"Şans Çarkı",emoji:"🎡",color:"linear-gradient(145deg,#bb327f,#f26dbb)"},
+ {name:"Hafıza Oyunu",emoji:"🧩",color:"linear-gradient(145deg,#26754a,#56c982)"},
+ {name:"Emoji Yarışı",emoji:"😎",color:"linear-gradient(145deg,#a34d25,#ef9a57)"},
+ {name:"Tombala",emoji:"🎱",color:"linear-gradient(145deg,#b62e57,#f07891)",new:true},
+ {name:"Kelime Bulmaca",emoji:"📝",color:"linear-gradient(145deg,#3856a8,#7188ed)"},
+ {name:"Refleks Ustası",emoji:"⚡",color:"linear-gradient(145deg,#a05b15,#f6b63d)"},
+ {name:"Doğru mu Yanlış mı?",emoji:"❓",color:"linear-gradient(145deg,#a12c6c,#ed67a8)"},
+ {name:"Renk Avı",emoji:"🎨",color:"linear-gradient(145deg,#306eae,#54c4d9)"},
+ {name:"Mini Golf",emoji:"⛳",color:"linear-gradient(145deg,#23714e,#64bd7c)"}
+];
+
+const gifts=[
+ {name:"Gül",emoji:"🌹",color:"#b63766"},
+ {name:"Elmas",emoji:"💎",color:"#2473bd"},
+ {name:"Taç",emoji:"👑",color:"#a27a24"},
+ {name:"Kalp",emoji:"💖",color:"#b33c78"},
+ {name:"Ayıcık",emoji:"🧸",color:"#91603c"},
+ {name:"Yıldız",emoji:"🌟",color:"#9b812b"}
+];
+
+/* ODA KARTLARI */
+
+function roomHTML(room){
+ return `
+ <article class="room">
+  <div class="room-cover ${room.cover}">
+   <span class="live">● CANLI</span>
+   ${room.emoji}
+  </div>
+  <div class="room-info">
+   <h3>${escapeHTML(room.name)}</h3>
+   <p>RUHDAŞ topluluğu · Sesli sohbet</p>
+   <div class="room-bottom">
+    <span style="font-size:12px;color:#aaa">👥 ${room.members} kişi</span>
+    <button class="join" onclick="joinRoom('${escapeHTML(room.name)}')">Katıl →</button>
+   </div>
+  </div>
+ </article>`;
+}
+
+/* OYUN KARTLARI */
+
+function gameHTML(game){
+ return `
+ <div class="hub-game" style="background:${game.color}" onclick="openGame('${escapeHTML(game.name)}','${game.emoji}')">
+  ${game.new?'<span class="game-new">YENİ</span>':''}
+  <span class="game-tag">OYUN</span>
+  <span class="game-art">${game.emoji}</span>
+  <h3>${escapeHTML(game.name)}</h3>
+ </div>`;
+}
+
+function giftHTML(gift){
+ return `
+ <div class="hub-game" style="background:${gift.color}" onclick="showGift('${gift.name}')">
+  <span class="game-art">${gift.emoji}</span>
+  <h3>${gift.name}</h3>
+ </div>`;
+}
+
+/* GÜVENLİ METİN */
+
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,char=>({
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#39;'
+ }[char]));
+}
+
+/* EKRANLARI OLUŞTUR */
+
+function render(){
+ document.getElementById("homeRooms").innerHTML=rooms.map(roomHTML).join("");
+ document.getElementById("allRooms").innerHTML=rooms.map(roomHTML).join("");
+
+ document.getElementById("gameGrid").innerHTML=games.map(gameHTML).join("");
+
+ document.getElementById("homeGames").innerHTML=
+ games.slice(0,6).map(gameHTML).join("");
+
+ document.getElementById("giftGrid").innerHTML=gifts.map(giftHTML).join("");
+}
+
+/* NAVİGASYON */
+
+function navigate(page){
+ const target=document.getElementById(page);
+ if(!target)return;
+
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ target.classList.add("active");
+
+ document.querySelectorAll("[data-page]").forEach(el=>{
+  el.classList.toggle("active",el.dataset.page===page);
+ });
+
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.querySelectorAll("[data-page]").forEach(el=>{
+ el.addEventListener("click",()=>navigate(el.dataset.page));
+});
+
+/* KATEGORİ FİLTRESİ */
+
+document.querySelectorAll("[data-filter]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll("[data-filter]").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+
+  const category=button.dataset.filter;
+
+  const filtered=category==="all"
+   ?rooms
+   :rooms.filter(room=>room.cat===category);
+
+  document.getElementById("homeRooms").innerHTML=filtered.map(roomHTML).join("");
+ });
+});
+
+/* ARAMA */
+
+document.getElementById("searchInput").addEventListener("input",event=>{
+ const query=event.target.value.trim().toLocaleLowerCase("tr");
+
+ const filteredRooms=rooms.filter(room=>
+  room.name.toLocaleLowerCase("tr").includes(query)
+ );
+
+ const filteredGames=games.filter(game=>
+  game.name.toLocaleLowerCase("tr").includes(query)
+ );
+
+ if(document.getElementById("games").classList.contains("active")){
+  document.getElementById("gameGrid").innerHTML=filteredGames.map(gameHTML).join("");
+ }else if(document.getElementById("rooms").classList.contains("active")){
+  document.getElementById("allRooms").innerHTML=filteredRooms.map(roomHTML).join("");
+ }else{
+  document.getElementById("homeRooms").innerHTML=filteredRooms.map(roomHTML).join("");
+ }
+});
+
+/* ODA İŞLEMLERİ */
+
+function joinRoom(name){
+ alert(name+" odası seçildi. Gerçek sesli bağlantı sonraki geliştirme aşamasında eklenecek.");
+}
+
+function createRoom(){
+ const name=prompt("Oda adını yaz:");
+
+ if(!name||!name.trim())return;
+
+ rooms.unshift({
+  name:name.trim(),
+  cat:"chat",
+  cover:"cover1",
+  emoji:"🎙️",
+  members:1
+ });
+
+ render();
+ navigate("rooms");
+}
+
+function createGameRoom(){
+ alert("Özel oyun odası sistemi hazırlanıyor!");
+}
+
+/* OYUN PENCERESİ */
+
+let selectedGame="";
+
+function openGame(name,emoji){
+ selectedGame=name;
+
+ document.getElementById("gameName").textContent=name;
+ document.getElementById("gameEmoji").textContent=emoji;
+ document.getElementById("gameDescription").textContent=
+  name+" oyununa hoş geldin! Oynanabilir oyun sürümü geliştirme aşamasında.";
+
+ document.getElementById("gameModal").classList.add("show");
+}
+
+function closeGame(){
+ document.getElementById("gameModal").classList.remove("show");
+}
+
+function startGame(){
+ alert(selectedGame+" oyununun gerçek oyun mekaniği henüz geliştirilmedi.");
+}
+
+function showGift(name){
+ alert(name+" hediyesi seçildi. Hediye gönderme sistemi sonraki aşamada eklenecek.");
+}
+
+function showVIP(){
+ alert("RUHDAŞ VIP sistemi hazırlanıyor!");
+}
+
+/* KULLANICI PROFİLİ - YEREL DEMO */
+
+function showAuth(){
+ document.getElementById("authModal").classList.add("show");
+}
+
+function closeAuth(){
+ document.getElementById("authModal").classList.remove("show");
+}
+
+function updateUser(){
+ const user=JSON.parse(localStorage.getItem("ruhdasUser")||"null");
+
+ if(!user)return;
+
+ document.getElementById("profileName").textContent=user.name;
+ document.getElementById("profileAvatar").textContent=user.name.charAt(0).toUpperCase();
+ document.getElementById("topAvatar").textContent=user.name.charAt(0).toUpperCase();
+}
+
+function register(){
+ const name=document.getElementById("authName").value.trim();
+ const email=document.getElementById("authEmail").value.trim();
+ const password=document.getElementById("authPassword").value;
+
+ const status=document.getElementById("authStatus");
+
+ if(!name||!email||!password){
+  status.textContent="Lütfen bütün alanları doldur.";
+  return;
+ }
+
+ if(password.length<6){
+  status.textContent="Şifre en az 6 karakter olmalı.";
+  return;
+ }
+
+ const user={
+  name:name,
+  email:email
+ };
+
+ localStorage.setItem("ruhdasUser",JSON.stringify(user));
+ localStorage.setItem("ruhdasSession","true");
+
+ updateUser();
+ closeAuth();
+
+ alert("RUHDAŞ ailesine hoş geldin "+name+"! ❤️");
+}
+
+function login(){
+ const email=document.getElementById("authEmail").value.trim();
+ const password=document.getElementById("authPassword").value;
+
+ const saved=JSON.parse(localStorage.getItem("ruhdasUser")||"null");
+
+ if(!saved||saved.email!==email){
+  document.getElementById("authStatus").textContent="Bu tarayıcıda kayıtlı hesap bulunamadı.";
+  return;
+ }
+
+ if(password.length<6){
+  document.getElementById("authStatus").textContent="Geçerli bir şifre gir.";
+  return;
+ }
+
+ localStorage.setItem("ruhdasSession","true");
+ updateUser();
+ closeAuth();
+
+ alert("Tekrar hoş geldin! ❤️");
+}
+
+function logout(){
+ localStorage.removeItem("ruhdasSession");
+ localStorage.removeItem("ruhdasUser");
+
+ document.getElementById("profileName").textContent="Misafir Kullanıcı";
+ document.getElementById("profileAvatar").textContent="R";
+ document.getElementById("topAvatar").textContent="R";
+
+ alert("Oturum kapatıldı.");
+}
+
+function editName(){
+ const user=JSON.parse(localStorage.getItem("ruhdasUser")||"null");
+
+ if(!user){
+  showAuth();
+  return;
+ }
+
+ const name=prompt("Yeni kullanıcı adın:",user.name);
+
+ if(!name||!name.trim())return;
+
+ user.name=name.trim();
+ localStorage.setItem("ruhdasUser",JSON.stringify(user));
+ updateUser();
+}
+
+/* BAŞLAT */
+
+render();
+updateUser();
+
+</script>
+</body>
+</html>
